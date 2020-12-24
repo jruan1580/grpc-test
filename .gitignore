@@ -4,3 +4,11 @@ UserManagement/.vs/
 UserManagement/User.Infrastructure/bin/
 
 UserManagement/User.Infrastructure/obj/
+
+UserManagement/User.Domain/bin/
+
+UserManagement/User.Domain/obj/
+
+UserManagement/User.Grpc/bin/
+
+UserManagement/User.Grpc/obj/
