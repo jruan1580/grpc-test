@@ -18,7 +18,8 @@ namespace User.Grpc
             services.AddGrpc();
 
             services.AddSingleton<IUserRepository, UsersRepository>();
-            services.AddTransient<IUserService, Domain.Services.UserService>();
+            services.AddTransient<IPasswordService, PasswordService>();
+            services.AddTransient<IUserService, Domain.Services.UserService>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -6,8 +6,6 @@
 
         public string Name { get; set; }
 
-        public string Password { get; set; }
-
         public bool LoggedOn { get; set; }
     }
 }
