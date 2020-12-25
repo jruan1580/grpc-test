@@ -4,3 +4,17 @@ UserManagement/.vs/
 UserManagement/User.Infrastructure/bin/
 
 UserManagement/User.Infrastructure/obj/
+
+CatalogManagement/.vs/
+
+CatalogManagement/Catalog.Domain/bin/
+
+CatalogManagement/Catalog.Domain/obj/
+
+CatalogManagement/Catalog.Grpc/bin/
+
+CatalogManagement/Catalog.Grpc/obj/
+
+CatalogManagement/Catalog.Infrastructure/bin/
+
+CatalogManagement/Catalog.Infrastructure/obj/
