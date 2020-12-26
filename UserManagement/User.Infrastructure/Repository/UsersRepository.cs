@@ -13,7 +13,8 @@ namespace User.Infrastructure.Repository
     {
         Task<List<Entities.User>> GetUsers();
         Task<Entities.User> GetUserByEmail(string email);
-        Task CreateUser(string name, string email, string password);
+        Task CreateUser(string name, string email, byte[] password);
+        Task UpdateStatus(string email, bool status);
     }
 
     public class UsersRepository : IUserRepository
@@ -34,7 +35,7 @@ namespace User.Infrastructure.Repository
             _dbPath = path;
         }
 
-        public async Task CreateUser(string name, string email, string password)
+        public async Task CreateUser(string name, string email, byte[] password)
         {
             var newUser = new Entities.User()
             {
@@ -69,6 +70,25 @@ namespace User.Infrastructure.Repository
             var users = JsonConvert.DeserializeObject<Users>(userJson);
 
             return users.Accounts;
+        }
+
+        public async Task UpdateStatus(string email, bool status)
+        {
+            var userJson = await File.ReadAllTextAsync(_dbPath);
+
+            var users = JsonConvert.DeserializeObject<Users>(userJson);
+
+            foreach(var user in users.Accounts)
+            {
+                if (!user.Email.Equals(email))
+                {
+                    continue;
+                }
+
+                user.LoggedOn = status;
+            }
+
+            await File.WriteAllTextAsync(_dbPath, JsonConvert.SerializeObject(users));
         }
     }
 }
