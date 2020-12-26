@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option csharp_namespace = "User.Grpc";
+
+service User{
+	rpc GetUserByEmail (UserEmailModel) returns (UserModel);
+	rpc GetUsers (EmptyModel) returns (stream UserModel);
+	rpc CreateUser (CreateUserModel) returns (EmptyModel);
+	rpc Login (LoginModel) returns (EmptyModel);
+	rpc Logout (UserEmailModel) returns (EmptyModel);
+}
+
+message EmptyModel {
+
+}
+
+message UserEmailModel{
+	string email = 1;
+}
+
+message UserModel{
+	string email = 1;
+	string name = 2;
+	bool loggedOn = 3;
+}
+
+message LoginModel{
+	string email = 1;
+	string password = 2;
+}
+
+message CreateUserModel{
+	UserModel user = 1;
+	string password = 2;
+}
