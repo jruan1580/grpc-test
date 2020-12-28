@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Catalog.Infrastructure.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +18,8 @@ namespace Catalog.Grpc
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddGrpc();
+
+            services.AddSingleton<ICatalogRepository, CatalogRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

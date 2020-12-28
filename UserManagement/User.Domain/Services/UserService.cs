@@ -34,6 +34,11 @@ namespace User.Domain.Services
                 throw new ArgumentException($"Invalid email: {email}");
             }
 
+            if ((await _userRepository.GetUserByEmail(email)) != null)
+            {
+                throw new ArgumentException($"User with email: {email} already exists");
+            }
+
             if (string.IsNullOrEmpty(name))
             {
                 throw new ArgumentException("Name is not passed in");
