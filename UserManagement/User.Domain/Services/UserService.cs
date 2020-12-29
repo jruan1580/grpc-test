@@ -10,6 +10,7 @@ namespace User.Domain.Services
     public interface IUserService
     {
         Task<List<CoreUser>> GetUsers();
+        Task<CoreUser> GetUserById(string userId);
         Task<CoreUser> GetUserByEmail(string email);
         Task CreateUser(string email, string name, string password);
         Task Login(string email, string password);
@@ -66,7 +67,24 @@ namespace User.Domain.Services
                 throw new Exception($"Unable to find user with email: {email}");
             }
 
-            return new CoreUser() { Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn };
+            return new CoreUser() { UserId = user.Id, Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn };
+        }
+
+        public async Task<CoreUser> GetUserById(string userId)
+        {
+            if (!Guid.TryParse(userId, out var id))
+            {
+                throw new Exception($"Invalid user id: {userId}");
+            }
+
+            var user = await _userRepository.GetUserById(id);
+
+            if (user == null)
+            {
+                throw new Exception($"Unable to find user with id: {userId}");
+            }
+
+            return new CoreUser() { UserId = user.Id, Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn };
         }
 
         public async Task<List<CoreUser>> GetUsers()
@@ -76,7 +94,7 @@ namespace User.Domain.Services
 
             foreach(var user in users)
             {
-                results.Add(new CoreUser() { Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn });
+                results.Add(new CoreUser() { UserId = user.Id, Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn });
             }
 
             return results;

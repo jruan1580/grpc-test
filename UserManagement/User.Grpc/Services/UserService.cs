@@ -19,15 +19,22 @@ namespace User.Grpc.Services
 
             foreach(var user in users)
             {
-                await responseStream.WriteAsync(new UserModel() { Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn });
+                await responseStream.WriteAsync(new UserModel() { Id = user.UserId.ToString(), Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn });
             }            
+        }
+
+        public override async Task<UserModel> GetUserById(UserIdModel request, ServerCallContext context)
+        {
+            var user = await _userService.GetUserById(request.Id);
+
+            return new UserModel() { Id = user.UserId.ToString(), Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn };
         }
 
         public override async Task<UserModel> GetUserByEmail(UserEmailModel request, ServerCallContext context)
         {
             var user = await _userService.GetUserByEmail(request.Email);
 
-            return new UserModel() { Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn };
+            return new UserModel() { Id = user.UserId.ToString(), Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn };
         }
 
         public override async Task<EmptyModel> CreateUser(CreateUserModel request, ServerCallContext context)
