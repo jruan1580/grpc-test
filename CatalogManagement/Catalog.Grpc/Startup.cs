@@ -37,7 +37,7 @@ namespace Catalog.Grpc
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<CatalogService>();
 
                 endpoints.MapGet("/", async context =>
                 {

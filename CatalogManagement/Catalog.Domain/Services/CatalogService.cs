@@ -8,10 +8,11 @@ namespace Catalog.Domain.Services
 {
     public interface ICatalogService
     {
+        Task<Item> GetCatalogItemById(string id);
         Task<List<Item>> GetItemsByCategory(string category);
         Task<List<Item>> GetItemsBySellerEmail(string email);
         Task AddItem(List<Item> items);
-        Task UpdateQuantity(Guid itemId, string method, int quantity);
+        Task UpdateQuantity(string itemId, string method, int quantity);
     }
 
     public class CatalogService : ICatalogService
@@ -46,6 +47,37 @@ namespace Catalog.Domain.Services
             await _catalogRepository.AddCatalogItems(catalogItems);
         }
 
+        public async Task<Item> GetCatalogItemById(string id)
+        {
+            if (!Guid.TryParse(id, out var itemId))
+            {
+                throw new ArgumentException($"Invalid Guid: {id}");
+            }
+
+            var catalogItem = await _catalogRepository.GetCatalogById(itemId);
+            if (catalogItem == null)
+            {
+                throw new Exception($"Unable to locate item with id: {id}");
+            }
+
+            var seller = await _userService.GetUserById(catalogItem.SellerId.ToString());
+            if (seller == null)
+            {
+                throw new Exception($"Unable to locate seller with id: {catalogItem.SellerId.ToString()} for catalog item with id: {catalogItem.Id.ToString()}");
+            }
+
+            return new Item()
+            {
+                Id = itemId,
+                ItemName = catalogItem.ItemName,
+                Category = catalogItem.Category,
+                Quantity = catalogItem.Quantity,
+                Price = catalogItem.Price,
+                SellerEmail = seller.Email,
+                SellerName = seller.Name
+            };
+        }
+
         public async Task<List<Item>> GetItemsByCategory(string category)
         {
             var catalogItems = await _catalogRepository.GetCatalogsByCategroy(category);
@@ -54,6 +86,11 @@ namespace Catalog.Domain.Services
             foreach(var catalogItem in catalogItems)
             {
                 var seller = await _userService.GetUserById(catalogItem.SellerId.ToString());
+                if (seller == null)
+                {
+                    continue;
+                }
+
                 items.Add(new Item()
                 {
                     Id = catalogItem.Id,
@@ -72,6 +109,11 @@ namespace Catalog.Domain.Services
         public async Task<List<Item>> GetItemsBySellerEmail(string email)
         {
             var seller = await _userService.GetUserByEmail(email);
+            if (seller == null)
+            {
+                throw new Exception($"Unable to locate seller with email: {email}");
+            }
+
             var catalogItems = await _catalogRepository.GetCatalogsBySeller(Guid.Parse(seller.Id));
             var items = new List<Item>();
 
@@ -92,9 +134,14 @@ namespace Catalog.Domain.Services
             return items;
         }
 
-        public async Task UpdateQuantity(Guid itemId, string operation, int quantity)
+        public async Task UpdateQuantity(string itemId, string operation, int quantity)
         {
-            var catalogItem = await _catalogRepository.GetCatalogById(itemId);
+            if (!Guid.TryParse(itemId, out var id))
+            {
+                throw new ArgumentException($"Invalid Guid: {itemId}");    
+            }
+
+            var catalogItem = await _catalogRepository.GetCatalogById(id);
             if (catalogItem == null)
             {
                 throw new Exception($"Unable to locate item with id: {itemId}");
