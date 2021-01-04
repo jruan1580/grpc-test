@@ -12,6 +12,7 @@ namespace User.Infrastructure.Repository
     public interface IUserRepository
     {
         Task<List<Entities.User>> GetUsers();
+        Task<Entities.User> GetUserById(Guid userId);
         Task<Entities.User> GetUserByEmail(string email);
         Task CreateUser(string name, string email, byte[] password);
         Task UpdateStatus(string email, bool status);
@@ -39,6 +40,7 @@ namespace User.Infrastructure.Repository
         {
             var newUser = new Entities.User()
             {
+                Id = Guid.NewGuid(),
                 Name = name,
                 Email = email,
                 Password = password,
@@ -61,6 +63,15 @@ namespace User.Infrastructure.Repository
             var users = JsonConvert.DeserializeObject<Users>(userJson);
 
             return users.Accounts.FirstOrDefault(u => u.Email.Equals(email));
+        }
+
+        public async Task<Entities.User> GetUserById(Guid userId)
+        {
+            var userJson = await File.ReadAllTextAsync(_dbPath);
+
+            var users = JsonConvert.DeserializeObject<Users>(userJson);
+
+            return users.Accounts.FirstOrDefault(u => u.Id == userId);
         }
 
         public async Task<List<Entities.User>> GetUsers()

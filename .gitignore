@@ -12,3 +12,17 @@ UserManagement/User.Domain/obj/
 UserManagement/User.Grpc/bin/
 
 UserManagement/User.Grpc/obj/
+
+CatalogManagement/.vs/
+
+CatalogManagement/Catalog.Domain/bin/
+
+CatalogManagement/Catalog.Domain/obj/
+
+CatalogManagement/Catalog.Grpc/bin/
+
+CatalogManagement/Catalog.Grpc/obj/
+
+CatalogManagement/Catalog.Infrastructure/bin/
+
+CatalogManagement/Catalog.Infrastructure/obj/
