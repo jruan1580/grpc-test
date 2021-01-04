@@ -26,3 +26,13 @@ CatalogManagement/Catalog.Grpc/obj/
 CatalogManagement/Catalog.Infrastructure/bin/
 
 CatalogManagement/Catalog.Infrastructure/obj/
+
+CartManagement/.vs/
+
+CartManagement/Cart.Domain/bin/
+
+CartManagement/Cart.Domain/obj/
+
+CartManagement/Cart.Infrastructure/bin/
+
+CartManagement/Cart.Infrastructure/obj/
