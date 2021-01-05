@@ -36,3 +36,7 @@ CartManagement/Cart.Domain/obj/
 CartManagement/Cart.Infrastructure/bin/
 
 CartManagement/Cart.Infrastructure/obj/
+
+CartManagement/Cart.Grpc/bin/
+
+CartManagement/Cart.Grpc/obj/

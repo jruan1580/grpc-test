@@ -14,7 +14,8 @@ namespace Cart.Infrastructure.Repository
         Task<List<Items>> GetCartItemsByUserId(Guid userId);
         Task AddCartItem(Guid userId, Items item);
         Task RemoveItemFromCart(Guid userId, Guid itemId);
-        Task UpdateQuantityByItem(Guid userId, Guid itemId, int quantity);
+        Task RemoveUserFromCart(Guid userId);
+        Task UpdateQuantityByItem(Guid userId, Guid itemId, int newQuantity);
     }
 
     public class CartsRepository : ICartsRepository
@@ -81,13 +82,8 @@ namespace Cart.Infrastructure.Repository
             var cartDb = JsonConvert.DeserializeObject<Carts>(cartJson);
 
             var usersCart = cartDb.DbRecords.FirstOrDefault(c => c.UserId == userId);
-
-            if (usersCart == null)
-            {
-                throw new ArgumentException($"Unable to find cart for userid: {userId}");
-            }
-
-            return usersCart.Items;
+    
+            return usersCart?.Items;
         }
 
         public async Task RemoveItemFromCart(Guid userId, Guid itemId)
@@ -121,7 +117,25 @@ namespace Cart.Infrastructure.Repository
             await File.WriteAllTextAsync(_dbPath, JsonConvert.SerializeObject(cartDb));
         }
 
-        public async Task UpdateQuantityByItem(Guid userId, Guid itemId, int quantity)
+        public async Task RemoveUserFromCart(Guid userId)
+        {
+            var cartJson = await File.ReadAllTextAsync(_dbPath);
+
+            var cartDb = JsonConvert.DeserializeObject<Carts>(cartJson);
+
+            var usersCart = cartDb.DbRecords.FirstOrDefault(c => c.UserId == userId);
+
+            if (usersCart == null)
+            {
+                throw new ArgumentException($"Unable to find cart for userid: {userId}");
+            }
+
+            cartDb.DbRecords.Remove(usersCart);
+
+            await File.WriteAllTextAsync(_dbPath, JsonConvert.SerializeObject(cartDb));
+        }
+
+        public async Task UpdateQuantityByItem(Guid userId, Guid itemId, int newQuantity)
         {
             var cartJson = await File.ReadAllTextAsync(_dbPath);
 
@@ -141,7 +155,7 @@ namespace Cart.Infrastructure.Repository
                 throw new ArgumentException($"Unable to locate item:{itemId} for user {userId}");
             }
 
-            itemStored.Quantity = quantity;
+            itemStored.Quantity = newQuantity;
 
             await File.WriteAllTextAsync(_dbPath, JsonConvert.SerializeObject(cartDb));
         }
