@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cart.Infrastructure", "Cart
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cart.Domain", "Cart.Domain\Cart.Domain.csproj", "{9BE4A1CD-83CE-40BE-AADC-C28F83F395C5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cart.Grpc", "Cart.Grpc\Cart.Grpc.csproj", "{F9A6D808-7859-4FCE-BB40-8BD243A34772}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Cart.Grpc", "Cart.Grpc\Cart.Grpc.csproj", "{F9A6D808-7859-4FCE-BB40-8BD243A34772}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

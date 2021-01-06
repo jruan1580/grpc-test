@@ -1,14 +1,9 @@
-﻿using System;
-
-namespace Cart.Domain.Models
+﻿namespace Cart.Domain.Models
 {
     public class ItemInCart
     {
-        public Guid ItemId { get; set; }
-        public string ItemName { get; set; }
-        public string Category { get; set; }
-        public string SellerName { get; set; }
-        public string QuantityInCart { get; set; }
-        public decimal Price { get; set; }
+        public Item Item { get; set; }
+        public decimal TotalPrice { get; set; }
+        public int QuantityInCart { get; set; }      
     }
 }

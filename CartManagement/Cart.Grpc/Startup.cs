@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Cart.Domain.Services;
+using Cart.Grpc.Services;
 using Cart.Infrastructure.Repository;
 using Grpc.Net.Client;
 using Microsoft.AspNetCore.Builder;
@@ -22,6 +24,8 @@ namespace Cart.Grpc
             services.AddGrpc();
 
             services.AddSingleton<ICartsRepository, CartsRepository>();
+
+            services.AddSingleton<ICartService, Domain.Services.CartService>();
             //services.AddSingleton(CreateCatalogClient);
         }
 
@@ -37,7 +41,7 @@ namespace Cart.Grpc
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGrpcService<GreeterService>();
+                endpoints.MapGrpcService<Services.CartService>();
 
                 endpoints.MapGet("/", async context =>
                 {

@@ -2,6 +2,7 @@
 using Cart.Infrastructure.Repository;
 using Cart.Infrastructure.Repository.Entities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -52,9 +53,48 @@ namespace Cart.Domain.Services
             await _cartsRepository.RemoveUserFromCart(userId);
         }
 
-        public Task<CartByUser> GetUsersCart(Guid userId)
+        public async Task<CartByUser> GetUsersCart(Guid userId)
         {
-            throw new NotImplementedException();
+            var user = await _userGrpcService.GetUserById(userId);
+
+            if (user == null)
+            {
+                throw new ArgumentException($"Unable to locate user with id: {userId.ToString()}");
+            }
+
+            var items = await _cartsRepository.GetCartItemsByUserId(userId);
+
+            var itemsInCart = new List<ItemInCart>();
+            var totalAmount = 0m;
+
+            foreach(var item in items)
+            {
+                var cartItem = await _catalogGrpcService.GetItemById(item.ItemId);
+                //remove it from cart repo
+                if (cartItem == null)
+                {
+                    await _cartsRepository.RemoveItemFromCart(userId, item.ItemId);
+
+                    continue;
+                }
+                
+                var itemInCart = new ItemInCart()
+                {
+                    Item = cartItem,
+                    QuantityInCart = item.Quantity,
+                    TotalPrice = (item.Quantity * cartItem.PricePerItem)
+                };
+
+                totalAmount += itemInCart.TotalPrice;
+                itemsInCart.Add(itemInCart);
+            }
+
+            return new CartByUser()
+            {
+                User = user,
+                Items = itemsInCart,
+                TotalAmount = totalAmount
+            };
         }
 
         public async Task RemoveItemFromCart(Guid userId, Guid itemId)

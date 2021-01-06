@@ -5,7 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Protobuf Include="Protos\greet.proto" GrpcServices="Server" />
+    <None Remove="Protos\cart.proto" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Protobuf Include="Protos\cart.proto" GrpcServices="Server">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Protobuf>
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Cart.Domain\Cart.Domain.csproj" />
     <ProjectReference Include="..\Cart.Infrastructure\Cart.Infrastructure.csproj" />
   </ItemGroup>
 

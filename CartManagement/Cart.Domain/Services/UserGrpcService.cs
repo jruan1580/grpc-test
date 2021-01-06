@@ -1,8 +1,11 @@
-﻿namespace Cart.Domain.Services
+﻿using System;
+using System.Threading.Tasks;
+
+namespace Cart.Domain.Services
 {
     public interface IUserGrpcService
     {
-
+        Task<Models.User> GetUserById(Guid userId);
     }
 
     public class UserGrpcService : IUserGrpcService
@@ -14,6 +17,16 @@
             _userClient = userClient;
         }
 
+        public async Task<Models.User> GetUserById(Guid userId)
+        {
+            var user = await _userClient.GetUserByIdAsync(new User.Grpc.UserIdModel() { Id = userId.ToString() });
 
+            return new Models.User()
+            {
+                UserId = userId,
+                UserName = user.Name,
+                Email = user.Email
+            };
+        }
     }
 }
