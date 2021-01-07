@@ -1,4 +1,5 @@
 ﻿using Cart.Domain.Services;
+using Google.Protobuf.Collections;
 using Grpc.Core;
 using System;
 using System.Threading.Tasks;
@@ -27,9 +28,30 @@ namespace Cart.Grpc.Services
             return new EmptyModel();
         }
 
-        public override Task<UsersCartResponse> GetUsersCart(UserIdLookupModel request, ServerCallContext context)
+        public override async Task<UsersCartResponse> GetUsersCart(UserIdLookupModel request, ServerCallContext context)
         {
-            return base.GetUsersCart(request, context);
+            var usersCart = await _coreCartService.GetUsersCart(Guid.Parse(request.UserId));
+
+            var response = new UsersCartResponse()
+            {
+                UserId = usersCart.User.UserId.ToString(),
+                UserName = usersCart.User.UserName,
+                TotalAmount = (double)usersCart.TotalAmount
+            };
+
+            foreach (var itemInCart in usersCart.Items)
+            {
+                response.Items.Add(new ItemInCartModel()
+                {
+                    ItemId = itemInCart.Item.ItemId.ToString(),
+                    ItemName = itemInCart.Item.ItemName,
+                    Category = itemInCart.Item.Category,
+                    QuantityInCart = itemInCart.QuantityInCart,
+                    TotalPrice = (double)itemInCart.TotalPrice
+                });;
+            }
+
+            return response;              
         }
 
         public override async Task<EmptyModel> ReduceItemQuantity(ReduceItemQuantityRequest request, ServerCallContext context)
