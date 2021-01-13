@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+option csharp_namespace = "Cart.Grpc";
+
+service Cart{
+	rpc Checkout (UserIdLookupModel) returns (EmptyModel);
+	rpc AddItemToCart (AddItemToCartRequest) returns (EmptyModel);
+	rpc RemoveItemFromCart (RemoveItemFromCartRequest) returns (EmptyModel);
+	rpc ReduceItemQuantity (ReduceItemQuantityRequest) returns (EmptyModel);
+	rpc GetUsersCart (UserIdLookupModel) returns (UsersCartResponse);	
+}
+
+message EmptyModel { }
+
+message UserIdLookupModel {
+	string userId = 1;
+}
+
+message AddItemToCartRequest{
+	string userId = 1;
+	string itemId = 2;
+	int32 quantity = 3;
+}
+
+message RemoveItemFromCartRequest{
+	string userId = 1;
+	string itemId = 2;
+}
+
+message ReduceItemQuantityRequest{
+	string userId = 1;
+	string itemId = 2;
+	int32 reduceQuantityAmount = 3;
+}
+
+message UsersCartResponse{
+	string userId = 1;
+	string userName = 2;
+	double totalAmount = 3;
+	repeated ItemInCartModel items = 4;
+}
+
+message ItemInCartModel{
+	string itemId = 1;
+	string itemName = 2;
+	string category = 3;
+	int32 quantityInCart = 4;
+	double totalPrice = 5;
+}
