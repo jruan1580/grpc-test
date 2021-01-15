@@ -1,4 +1,5 @@
 ﻿using Catalog.Domain.Models;
+using Catalog.Infrastructure.GrpcServices;
 using Catalog.Infrastructure.Repository;
 using System;
 using System.Collections.Generic;

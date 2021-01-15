@@ -1,0 +1,52 @@
+syntax = "proto3";
+
+option csharp_namespace = "Catalog.Grpc";
+
+service Catalog{
+	rpc GetItemById (ItemByIdLookup) returns (Item);
+	rpc GetItemsByCategory (ItemByCategoryLookup) returns (stream Item);
+	rpc GetItemsBySellerEmail (ItemBySellerEmailLookup) returns (stream Item);
+	rpc AddQuantity (AddQuantityToItem) returns (EmptyModel);
+	rpc SubtractQuantity (SubtractQuantityFromItem) returns (EmptyModel);
+	rpc AddNewItems (AddNewItemsModel) returns (EmptyModel);
+}
+
+message EmptyModel{
+
+}
+
+message ItemByIdLookup{
+	string id = 1;
+}
+
+message ItemByCategoryLookup{
+	string category = 1;
+}
+
+message ItemBySellerEmailLookup{
+	string email = 1;
+}
+
+message Item{
+	string id = 1;
+	string name = 2;
+	string category = 3;
+	int32 quantity = 4;
+	double price = 5;
+	string sellerEmail = 6;
+	string sellerName = 7;
+}
+
+message AddQuantityToItem{
+	string id = 1;
+	int32 quantity = 2;
+}
+
+message SubtractQuantityFromItem{
+	string id = 1;
+	int32 quantity = 2;
+}
+
+message AddNewItemsModel {
+	repeated Item item = 1;
+}

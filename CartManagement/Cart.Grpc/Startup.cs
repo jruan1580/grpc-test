@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Cart.Domain.Accessors;
-using Cart.Domain.Services;
-using Cart.Grpc.Services;
+﻿using Cart.Domain.Services;
+using Cart.Infrastructure.GrpcService.Accessor;
 using Cart.Infrastructure.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

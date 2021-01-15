@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using User.Grpc;
 
-namespace Catalog.Domain.Services
+namespace Catalog.Infrastructure.GrpcServices
 {
     public interface IUserGrpcService
     {
