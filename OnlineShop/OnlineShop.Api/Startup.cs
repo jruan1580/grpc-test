@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using OnlineShop.Api.Services;
 
 namespace OnlineShop.Api
 {
@@ -31,6 +32,10 @@ namespace OnlineShop.Api
             services.AddSingleton(CreateUserGrpcClient());
             services.AddSingleton(CreateCartGrpcClient());
             services.AddSingleton(CreateCatalogGrpcClient());
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<ICatalogService, CatalogService>();
+            services.AddTransient<ICartService, CartService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
