@@ -30,11 +30,6 @@ namespace User.Domain.Services
 
         public async Task CreateUser(string email, string name, string password)
         {
-            if (ValidEmail(email))
-            {
-                throw new ArgumentException($"Invalid email: {email}");
-            }
-
             if ((await _userRepository.GetUserByEmail(email)) != null)
             {
                 throw new ArgumentException($"User with email: {email} already exists");
@@ -55,16 +50,11 @@ namespace User.Domain.Services
 
         public async Task<CoreUser> GetUserByEmail(string email)
         {
-            if (ValidEmail(email))
-            {
-                throw new ArgumentException($"Invalid email: {email}");
-            }
-
             var user = await _userRepository.GetUserByEmail(email);
 
             if (user == null)
             {
-                throw new Exception($"Unable to find user with email: {email}");
+                throw new ArgumentException($"Unable to find user with email: {email}");
             }
 
             return new CoreUser() { UserId = user.Id, Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn };
@@ -74,14 +64,14 @@ namespace User.Domain.Services
         {
             if (!Guid.TryParse(userId, out var id))
             {
-                throw new Exception($"Invalid user id: {userId}");
+                throw new ArgumentException($"Invalid user id: {userId}");
             }
 
             var user = await _userRepository.GetUserById(id);
 
             if (user == null)
             {
-                throw new Exception($"Unable to find user with id: {userId}");
+                throw new ArgumentException($"Unable to find user with id: {userId}");
             }
 
             return new CoreUser() { UserId = user.Id, Name = user.Name, Email = user.Email, LoggedOn = user.LoggedOn };
@@ -102,54 +92,31 @@ namespace User.Domain.Services
 
         public async Task Login(string email, string password)
         {
-            if (ValidEmail(email))
-            {
-                throw new ArgumentException($"Invalid email: {email}");
-            }
-
             var user = await _userRepository.GetUserByEmail(email);
 
             if (user == null)
             {
-                throw new Exception($"Unable to find user with email: {email}");
+                throw new ArgumentException($"Unable to find user with email: {email}");
             }            
 
             if (!_passwordService.VerifyPasswordHash(password, user.Password))
             {
-                throw new Exception($"Password is incorrect.");
+                throw new ArgumentException($"Password is incorrect.");
             }
 
             await _userRepository.UpdateStatus(email, true);
         }
 
         public async Task Logout(string email)
-        {
-            if (ValidEmail(email))
-            {
-                throw new ArgumentException($"Invalid email: {email}");
-            }
-
+        {           
             var user = await _userRepository.GetUserByEmail(email);
 
             if (user == null)
             {
-                throw new Exception($"Unable to find user with email: {email}");
+                throw new ArgumentException($"Unable to find user with email: {email}");
             }
 
             await _userRepository.UpdateStatus(email, false);            
-        }
-
-        private bool ValidEmail(string email)
-        {
-            try
-            {
-                var addr = new MailAddress(email);
-                return addr.Address == email;
-            }
-            catch
-            {
-                return false;
-            }
         }
     }
 }

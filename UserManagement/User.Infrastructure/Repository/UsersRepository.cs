@@ -24,11 +24,11 @@ namespace User.Infrastructure.Repository
 
         public UsersRepository()
         {
-            var outPutDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().CodeBase);
+            var outPutDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             var path = Path.Combine(outPutDirectory, "Repository\\Database\\Users.txt");
 
-            if (File.Exists(path))
+            if (!File.Exists(path))
             {
                 throw new Exception("Unable to locate user db");
             }
@@ -49,7 +49,10 @@ namespace User.Infrastructure.Repository
 
             var userJson = await File.ReadAllTextAsync(_dbPath);
 
-            var users = JsonConvert.DeserializeObject<Users>(userJson);
+            var users = (string.IsNullOrEmpty(userJson)) 
+                ? new Users() { Accounts = new List<Entities.User>() } 
+                : JsonConvert.DeserializeObject<Users>(userJson);
+         
 
             users.Accounts.Add(newUser);
 
@@ -60,6 +63,11 @@ namespace User.Infrastructure.Repository
         {
             var userJson = await File.ReadAllTextAsync(_dbPath);
 
+            if (string.IsNullOrEmpty(userJson))
+            {
+                return null;
+            }
+
             var users = JsonConvert.DeserializeObject<Users>(userJson);
 
             return users.Accounts.FirstOrDefault(u => u.Email.Equals(email));
@@ -68,6 +76,11 @@ namespace User.Infrastructure.Repository
         public async Task<Entities.User> GetUserById(Guid userId)
         {
             var userJson = await File.ReadAllTextAsync(_dbPath);
+
+            if (string.IsNullOrEmpty(userJson))
+            {
+                return null;
+            }
 
             var users = JsonConvert.DeserializeObject<Users>(userJson);
 
@@ -78,6 +91,11 @@ namespace User.Infrastructure.Repository
         {
             var userJson = await File.ReadAllTextAsync(_dbPath);
 
+            if (string.IsNullOrEmpty(userJson))
+            {
+                return new List<Entities.User>();
+            }
+
             var users = JsonConvert.DeserializeObject<Users>(userJson);
 
             return users.Accounts;
@@ -86,6 +104,11 @@ namespace User.Infrastructure.Repository
         public async Task UpdateStatus(string email, bool status)
         {
             var userJson = await File.ReadAllTextAsync(_dbPath);
+
+            if (string.IsNullOrEmpty(userJson))
+            {
+                return;
+            }
 
             var users = JsonConvert.DeserializeObject<Users>(userJson);
 
