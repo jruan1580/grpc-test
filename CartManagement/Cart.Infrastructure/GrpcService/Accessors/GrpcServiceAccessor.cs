@@ -1,7 +1,7 @@
 ﻿using Grpc.Net.Client;
 using Microsoft.Extensions.Configuration;
 
-namespace Cart.Domain.Accessors
+namespace Cart.Infrastructure.GrpcService.Accessor
 {
     public interface IGrpcServiceAccessor
     {

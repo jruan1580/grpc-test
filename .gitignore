@@ -40,3 +40,9 @@ CartManagement/Cart.Infrastructure/obj/
 CartManagement/Cart.Grpc/bin/
 
 CartManagement/Cart.Grpc/obj/
+
+OnlineShop/.vs/
+
+OnlineShop/OnlineShop.Api/bin/
+
+OnlineShop/OnlineShop.Api/obj/

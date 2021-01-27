@@ -1,4 +1,6 @@
-﻿using Cart.Domain.Models;
+﻿using Cart.Domain.Mappers;
+using Cart.Domain.Models;
+using Cart.Infrastructure.GrpcService;
 using Cart.Infrastructure.Repository;
 using Cart.Infrastructure.Repository.Entities;
 using System;
@@ -55,7 +57,7 @@ namespace Cart.Domain.Services
 
         public async Task<CartByUser> GetUsersCart(Guid userId)
         {
-            var user = await _userGrpcService.GetUserById(userId);
+            var user = (await _userGrpcService.GetUserById(userId)).GrpcUserModelToDomainUserModel(); ;
 
             if (user == null)
             {
@@ -69,7 +71,8 @@ namespace Cart.Domain.Services
 
             foreach(var item in items)
             {
-                var cartItem = await _catalogGrpcService.GetItemById(item.ItemId);
+                var cartItem = (await _catalogGrpcService.GetItemById(item.ItemId)).CatalogItemToDomainItem();
+
                 //remove it from cart repo
                 if (cartItem == null)
                 {
